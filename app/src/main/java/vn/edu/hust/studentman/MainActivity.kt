@@ -57,48 +57,66 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAddNewStudentDialog() {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_edit_student, null)
-        val nameEditText = dialogView.findViewById<EditText>(R.id.edit_text_name)
-        val idEditText = dialogView.findViewById<EditText>(R.id.edit_text_id)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.layout_dialog, null)
+        val nameEditText = dialogView.findViewById<EditText>(R.id.edit_hoten)
+        val idEditText = dialogView.findViewById<EditText>(R.id.edit_mssv)
+        val okButton = dialogView.findViewById<Button>(R.id.button_ok)
+        val cancelButton = dialogView.findViewById<Button>(R.id.button_cancel)
 
-        AlertDialog.Builder(this)
-            .setTitle("Add New Student")
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Thêm sinh viên")
             .setView(dialogView)
-            .setPositiveButton("Add") { _, _ ->
-                val name = nameEditText.text.toString()
-                val id = idEditText.text.toString()
-                val newStudent = StudentModel(name, id)
-                students.add(newStudent)
-                studentAdapter.notifyItemInserted(students.size - 1)
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+            .create()
+
+        okButton.setOnClickListener {
+            val name = nameEditText.text.toString()
+            val id = idEditText.text.toString()
+            val newStudent = StudentModel(name, id)
+            students.add(newStudent)
+            studentAdapter.notifyItemInserted(students.size - 1)
+            dialog.dismiss()
+        }
+
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showEditStudentDialog(student: StudentModel) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_edit_student, null)
-        val nameEditText = dialogView.findViewById<EditText>(R.id.edit_text_name)
-        val idEditText = dialogView.findViewById<EditText>(R.id.edit_text_id)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.layout_dialog, null)
+        val nameEditText = dialogView.findViewById<EditText>(R.id.edit_hoten)
+        val idEditText = dialogView.findViewById<EditText>(R.id.edit_mssv)
+        val okButton = dialogView.findViewById<Button>(R.id.button_ok)
+        val cancelButton = dialogView.findViewById<Button>(R.id.button_cancel)
 
         nameEditText.setText(student.name)
         idEditText.setText(student.id)
 
-        AlertDialog.Builder(this)
-            .setTitle("Edit Student")
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Sửa sinh viên")
             .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
-                student.name = nameEditText.text.toString()
-                student.id = idEditText.text.toString()
-                studentAdapter.notifyDataSetChanged()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+            .create()
+
+        okButton.setOnClickListener {
+            student.name = nameEditText.text.toString()
+            student.id = idEditText.text.toString()
+            studentAdapter.notifyDataSetChanged()
+            dialog.dismiss()
+        }
+
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showDeleteStudentDialog(student: StudentModel) {
         AlertDialog.Builder(this)
-            .setTitle("Delete Student")
-            .setMessage("Are you sure you want to delete ${student.name}?")
+            .setTitle("Xóa sinh viên")
+            .setMessage("Ban chac chan muon xoa\n${student.name}?")
             .setPositiveButton("Delete") { _, _ ->
                 val position = students.indexOf(student)
                 students.remove(student)
